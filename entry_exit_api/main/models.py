@@ -4,7 +4,7 @@ from django.db import models
 from django.db import models
 
 
-class guest(models.Model):
+class Guests(models.Model):
     name = models.CharField(max_length=100)
     userid = models.CharField(max_length=14, primary_key=True)
     email_id = models.CharField(max_length=120)
@@ -35,4 +35,4 @@ class Event_DB(models.Model):
 
 
 class userEvent(models.Model):
-    userid = models.ForeignKey(guest, on_delete=models.CASCADE, default=0)
+    userid = models.ForeignKey(Guests, on_delete=models.CASCADE, default=0)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import guest, Event_DB, userEvent
-from .serializers import guestSerializer, Event_DBSerializer, userEventSerializer
+from .models import Guests, Event_DB, userEvent
+from .serializers import GuestsSerializer, Event_DBSerializer, userEventSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,6 +24,21 @@ def event_list(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET', 'POST'])
+def guest_list(request, format=None):
+
+    if request.method == 'GET':
+        guests = Guests.objects.all()
+        serializer = GuestsSerializer(guests, many=True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        serializer = GuestsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def event_detail(request, event_id, format=None):
     try:
@@ -32,7 +47,7 @@ def event_detail(request, event_id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = Event_DB
+        serializer = Event_DBSerializer(event)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -47,39 +62,24 @@ def event_detail(request, event_id, format=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
-def guest_list(request, format=None):
-
-    if request.method == 'GET':
-        guests = guest.objects.all()
-        serializer = guestSerializer(guests, many=True)
-        return Response(serializer.data)
-
-    if request.method == 'POST':
-        serializer = guestSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
 @api_view(['GET', 'PUT', 'DELETE'])
 def guest_detail(request, userid, format=None):
     try:
-        event = guest.objects.get(pk=userid)
+        guest = Guests.objects.get(pk=userid)
     except guest.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = guest
+        serializer = GuestsSerializer(guest)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = guestSerializer(event, data=request.data)
+        serializer = GuestsSerializer(guest, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        event.delete()
+        guest.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
