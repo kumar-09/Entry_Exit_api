@@ -42,3 +42,11 @@ class userEvent(models.Model):
 
     # def __str__(self):
     #     return self.userid
+
+
+class GeneratedPrime(models.Model):
+    value = models.PositiveIntegerField()
+    generated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.value)

@@ -26,5 +26,6 @@ urlpatterns = [
     path('guests/', views.guest_list),
     path('guest/<str:userid>', views.guest_detail),
     path('userevents/', views.userevent_list),
-    path('userevent/<str:event_id>', views.userEvent_detail)
+    path('userevent/<str:event_id>', views.userEvent_detail),
+    path('generateprime/', views.generate_prime)
 ]

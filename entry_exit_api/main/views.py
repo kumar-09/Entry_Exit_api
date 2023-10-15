@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Guests, Event_DB, userEvent
+from django.http import JsonResponse, HttpResponse
+from .models import Guests, Event_DB, userEvent, GeneratedPrime
 from .serializers import GuestsSerializer, Event_DBSerializer, userEventSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+import qrcode
+import sympy
 # Create your views here.
 
 
@@ -121,3 +122,27 @@ def userEvent_detail(request, event_id, format=None):
     elif request.method == 'DELETE':
         userevent.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def generate_prime(request):
+    # Generate a new prime number
+    prime1 = sympy.randprime(10, 1000)
+    prime2 = sympy.randprime(10000, 15000)
+    generated_prime = GeneratedPrime(value=prime1*prime2)
+    generated_prime.save()
+
+    # Create a QR code with the prime number
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(str(prime1*prime2))
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Serve the QR code image as an HTTP response
+    response = HttpResponse(content_type="image/png")
+    img.save(response, "PNG")
+    return response
