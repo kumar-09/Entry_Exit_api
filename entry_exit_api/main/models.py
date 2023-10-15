@@ -36,3 +36,9 @@ class Event_DB(models.Model):
 
 class userEvent(models.Model):
     userid = models.ForeignKey(Guests, on_delete=models.CASCADE, default=0)
+    event_id = models.CharField(max_length=100, default=0)
+    registered = models.BooleanField(default=False)
+    attended = models.BooleanField(default=False)
+
+    # def __str__(self):
+    #     return self.userid

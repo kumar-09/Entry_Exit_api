@@ -17,4 +17,4 @@ class Event_DBSerializer(serializers.ModelSerializer):
 class userEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = userEvent
-        fields = ['userid']
+        fields = ['userid', 'event_id', 'registered', 'attended']

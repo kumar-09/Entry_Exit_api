@@ -24,5 +24,7 @@ urlpatterns = [
     path('events/', views.event_list),
     path('event/<str:event_id>', views.event_detail),
     path('guests/', views.guest_list),
-    path('guest/<str:userid>', views.guest_detail)
+    path('guest/<str:userid>', views.guest_detail),
+    path('userevents/', views.userevent_list),
+    path('userevent/<str:event_id>', views.userEvent_detail)
 ]
